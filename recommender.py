@@ -58,7 +58,7 @@ class JacLodRecommendationEngine:
                 movie2_uri = self.movies_set.loc[movie2]['dbpedia_uri']
                 movie2_props = sparql_utils.get_props_from_dbpedia(movie2_uri, exclusions)
                 jac_sim = self.__calculate_jaccard(movie1_props, movie2_props)
-                sim_movies.at[movie1, movie2] = jac_sim
+                sim_movies.loc[movie1, movie2] = jac_sim
                 print("sim: " + str(movie1) + " / " + str(movie2) + " = " + str(sim_movies.loc[movie1, movie2]))
 
         return sim_movies
