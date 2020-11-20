@@ -15,12 +15,10 @@ class JacLodRecommendationEngine:
         :param test_set: test data frame with interactions to predict
         :param k: number of neighbours
         """
+
         self.user_item = user_item
         self.test_set = test_set
-
-        self.movies_set = movies_set
-        self.movies_set.set_index(movies_set['movie_id'].values)
-
+        self.movies_set = movies_set.set_index(movies_set['movie_id'].values)
         self.k = k
 
     def __calculate_jaccard(self, props_m1: list, props_m2: list):
@@ -30,6 +28,7 @@ class JacLodRecommendationEngine:
         :param props_m2:  list of tuples (properties, resources) of movie 2
         :return: jaccard similarity between the two lists
         """
+
         intersection = pd.Series(list(set(props_m1).intersection(set(props_m2))), dtype=str)
         union = pd.Series(list(set(props_m1).union(set(props_m2))), dtype=str)
 
@@ -44,8 +43,9 @@ class JacLodRecommendationEngine:
         Function that generates the similarity matrix
         :return: movie per movie similarity matrix where 1 means more proximity and 0 otherwise
         """
+
         exclusions = ["http://xmlns.com/foaf/0.1/name"]
-        movies_id = self.movies_set['movie_id'].values
+        movies_id = self.movies_set['movie_id'].to_list()
         movies_id.sort()
         sim_movies = pd.DataFrame(0, index=movies_id, columns=movies_id)
 
@@ -59,7 +59,7 @@ class JacLodRecommendationEngine:
                 movie2_props = sparql_utils.get_props_from_dbpedia(movie2_uri, exclusions)
                 jac_sim = self.__calculate_jaccard(movie1_props, movie2_props)
                 sim_movies.at[movie1, movie2] = jac_sim
-                print("sim bettween " + str(movie1) + " " + str(movie2) + "= " + str(sim_movies.loc[movie1, movie2]))
+                print("sim: " + str(movie1) + " / " + str(movie2) + " = " + str(sim_movies.loc[movie1, movie2]))
 
         return sim_movies
 
@@ -72,6 +72,7 @@ class JacLodRecommendationEngine:
         :param file_path: path where the matrix will be saved/read from
         :return: the similarity matrix with index and column
         """
+
         if flag == 0:
             sim_matrix = self.__generate_similarity_matrix()
             sim_matrix.to_csv(file_path, mode='w', header=False, index=False)
