@@ -21,16 +21,18 @@ class JacLodRecommendationEngine:
         self.movies_set = movies_set.set_index(movies_set['movie_id'].values)
         self.k = k
 
-    def __calculate_jaccard(self, props_m1: list, props_m2: list):
+    def __calculate_jaccard(self, props_m1: pd.DataFrame, props_m2: pd.DataFrame):
         """
         Function that calculates the jaccard similarity of two movies
-        :param props_m1: list of tuples (properties, resources) of movie 1
-        :param props_m2:  list of tuples (properties, resources) of movie 2
+        :param props_m1: data frame with the properties of movie 1
+        :param props_m2: data frame with the properties of movie 2
         :return: jaccard similarity between the two lists
         """
+        m1_tuples = [tuple(x) for x in props_m1.to_numpy()]
+        m2_tuples = [tuple(x) for x in props_m2.to_numpy()]
 
-        intersection = pd.Series(list(set(props_m1).intersection(set(props_m2))), dtype=str)
-        union = pd.Series(list(set(props_m1).union(set(props_m2))), dtype=str)
+        intersection = pd.Series(list(set(m1_tuples).intersection(set(m2_tuples))), dtype=str)
+        union = pd.Series(list(set(m1_tuples).union(set(m2_tuples))), dtype=str)
 
         intersection_n = len(intersection)
         union_n = len(union)
@@ -44,19 +46,17 @@ class JacLodRecommendationEngine:
         :return: movie per movie similarity matrix where 1 means more proximity and 0 otherwise
         """
 
-        exclusions = ["http://xmlns.com/foaf/0.1/name"]
         movies_id = self.movies_set['movie_id'].to_list()
         movies_id.sort()
+        movies_props = sparql_utils.get_all_movie_props(self.movies_set, flag=0)
         sim_movies = pd.DataFrame(0, index=movies_id, columns=movies_id)
 
         for i in range(0, len(movies_id)):
             movie1 = movies_id[i]
-            movie1_uri = self.movies_set.loc[movie1]['dbpedia_uri']
-            movie1_props = sparql_utils.get_props_from_dbpedia(movie1_uri, exclusions)
+            movie1_props = movies_props.loc[movie1]
             for j in range(i, len(movies_id)):
                 movie2 = movies_id[j]
-                movie2_uri = self.movies_set.loc[movie2]['dbpedia_uri']
-                movie2_props = sparql_utils.get_props_from_dbpedia(movie2_uri, exclusions)
+                movie2_props = movies_props.loc[movie2]
                 jac_sim = self.__calculate_jaccard(movie1_props, movie2_props)
                 sim_movies.loc[movie1, movie2] = jac_sim
                 print("sim: " + str(movie1) + " / " + str(movie2) + " = " + str(sim_movies.loc[movie1, movie2]))
