@@ -12,6 +12,8 @@ def __get_props_of_movie_from_dbpedia(movie_id: int, movie_uri: str):
     :return: dict with properties of movies, along with its' movie id
     """
 
+    print(movie_uri)
+
     sparql = SPARQLWrapper("http://dbpedia.org/sparql")
     sparql.setQuery("""
     PREFIX owl: <http://www.w3.org/2002/07/owl#>
