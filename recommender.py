@@ -70,14 +70,13 @@ class JacLodRecommendationEngine:
 
         return movie_tuples
 
-    def __generate_similarity_matrix(self):
+    def __generate_similarity_matrix(self, movies_id: list):
         """
         Function that generates the similarity matrix
+        :param movies_id: list of all movie id on data set
         :return: movie per movie similarity matrix where 1 means more proximity and 0 otherwise
         """
 
-        movies_id = self.movies_set['movie_id'].to_list()
-        movies_id.sort()
         movies_props = sparql_utils.get_all_movie_props(self.movies_set, flag=1)
         sim_movies = pd.DataFrame(0, index=movies_id, columns=movies_id)
 
@@ -103,14 +102,15 @@ class JacLodRecommendationEngine:
         :param file_path: path where the matrix will be saved/read from
         :return: the similarity matrix with index and column
         """
+        movies_id = self.movies_set['movie_id'].to_list()
+        movies_id.sort()
 
         if flag == 0:
-            sim_matrix = self.__generate_similarity_matrix()
+            sim_matrix = self.__generate_similarity_matrix(movies_id)
             sim_matrix.to_csv(file_path, mode='w', header=False, index=False)
         else:
             sim_matrix = pd.read_csv(file_path, header=None)
-
-        sim_matrix.index = self.user_item.columns
-        sim_matrix.columns = self.user_item.columns
+            sim_matrix.columns = movies_id
+            sim_matrix.set_index(movies_id)
 
         return sim_matrix
