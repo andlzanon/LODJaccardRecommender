@@ -27,7 +27,8 @@ def main():
     movies_set = read_data_set("./facebook_movies/mappingLinkedData.tsv", ['movie_id', 'dbpedia_uri'])
 
     # create user/item matrix
-    user_item = pd.DataFrame(index=test_set["user_id"].unique(), columns=[i for i in range(1, 3901)])
+    user_item = pd.DataFrame(index=test_set["user_id"].unique(),
+                             columns=[i for i in movies_set['movie_id'].sort_values().tolist()])
 
     # set 1 on user/item matrix if user interacted with movie
     for index, row in train_set.iterrows():
@@ -36,8 +37,8 @@ def main():
         user_item.loc[user_id, movie_id] = 1
 
     # call recomendation engine and get or generate similarity matrix based on dbpedia
-    recommender_engine = recommender.JacLodRecommendationEngine(user_item, movies_set, test_set, 10)
-    recommender_engine.get_similarity_matrix(flag=0)
+    recommender_engine = recommender.JacLodRecommendationEngine(user_item, movies_set, test_set, 5, 5)
+    recommender_engine.generate_recommendation(explanation_flag=0, sim_matrix_flag=1, user_id=1)
     print("--- END ---")
 
 

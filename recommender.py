@@ -7,7 +7,7 @@ import explanations
 # A class that generates recomendations and explanations based on dbpedia
 class JacLodRecommendationEngine:
 
-    def __init__(self, user_item: pd.DataFrame, movies_set: pd.DataFrame, test_set: pd.DataFrame, k: int):
+    def __init__(self, user_item: pd.DataFrame, movies_set: pd.DataFrame, test_set: pd.DataFrame, k: int, n: int):
         """
         Constructor of the class
         :param user_item: user item matrix
@@ -20,6 +20,7 @@ class JacLodRecommendationEngine:
         self.test_set = test_set
         self.movies_set = movies_set.set_index(movies_set['movie_id'].values)
         self.k = k
+        self.n = n
 
     def __calculate_jaccard(self,  movie1_id: int, props_m1: list, movie2_id: int, props_m2: list):
         """
@@ -93,7 +94,7 @@ class JacLodRecommendationEngine:
 
         return sim_movies
 
-    def get_similarity_matrix(self, flag: int, file_path="./generated_files/sim_matrix.csv"):
+    def __get_similarity_matrix(self, flag: int, file_path="./generated_files/sim_matrix.csv"):
         """
         Function that gets or generates the similarity matrix based on the flag
         :param flag: if 0 the function will generate the sim matrix and save it on path
@@ -111,6 +112,47 @@ class JacLodRecommendationEngine:
         else:
             sim_matrix = pd.read_csv(file_path, header=None)
             sim_matrix.columns = movies_id
-            sim_matrix.set_index(movies_id)
+            sim_matrix.index = movies_id
 
         return sim_matrix
+
+    def __calculate_prediction(self, movie: int, profile: pd.DataFrame, sim_matrix: pd.DataFrame):
+        curr_n = 0
+        i = 1
+        prediction = 0
+
+        similar_movies = sim_matrix.loc[movie].sort_values(ascending=False)
+        while curr_n < self.k and i < len(similar_movies):
+            neig_movie = similar_movies.index[i]
+            if neig_movie in profile.index:
+                prediction = prediction + similar_movies.iloc[i]
+                curr_n = curr_n + 1
+            i = i + 1
+
+        if curr_n != 0:
+            prediction = prediction / curr_n
+
+        return prediction
+
+    def generate_recommendation(self, explanation_flag: int, sim_matrix_flag: int, user_id: int):
+        sim_matrix = self.__get_similarity_matrix(sim_matrix_flag)
+        user_interactions = self.user_item.loc[user_id].sort_values()
+
+        profile = user_interactions[user_interactions == 1]
+        prediction = user_interactions[user_interactions.isnull()]
+
+        for movie in prediction.index:
+            prediction.loc[movie] = self.__calculate_prediction(movie, profile, sim_matrix)
+
+        prediction = prediction.sort_values(ascending=False)
+        recommended_movies = prediction[:self.n]
+        print("Movies watched by the user " + str(user_id) + ": ")
+        for movie in profile.index:
+            print(self.movies_set.loc[movie]['dbpedia_uri'])
+
+        print("Movies recommended to the user " + str(user_id) + ": ")
+        for movie in recommended_movies.index:
+            print(self.movies_set.loc[movie]['dbpedia_uri'])
+
+    def generate_map(self):
+        return
