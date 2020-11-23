@@ -117,6 +117,13 @@ class JacLodRecommendationEngine:
         return sim_matrix
 
     def __calculate_prediction(self, movie: int, profile: pd.DataFrame, sim_matrix: pd.DataFrame):
+        """
+        Calculates the prediction of a user to like a movie
+        :param movie: movie that the user may like
+        :param profile: user profile with items interacted
+        :param sim_matrix: similarity matrix
+        :return: sum os similarities that predicts if the user will like an item
+        """
         curr_n = 0
         i = 1
         prediction = 0
@@ -135,6 +142,13 @@ class JacLodRecommendationEngine:
         return prediction
 
     def generate_recommendation(self, explanation_flag: int, sim_matrix_flag: int, user_id: int):
+        """
+        Function that generates a top n recommendation to a user
+        :param explanation_flag: 0 to generate explanation and other numbers to not generate explanations
+        :param sim_matrix_flag: 0 to generate similarity matrix and other numbers to read from file
+        :param user_id: user to generate recommendation
+        :return: recommendations with or without the explanation to the user
+        """
         sim_matrix = self.__get_similarity_matrix(sim_matrix_flag)
         user_interactions = self.user_item.loc[user_id].sort_values()
 
