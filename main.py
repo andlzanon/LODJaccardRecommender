@@ -37,8 +37,8 @@ def main():
         user_item.loc[user_id, movie_id] = 1
 
     # call recomendation engine and get or generate similarity matrix based on dbpedia
-    recommender_engine = recommender.JacLodRecommendationEngine(user_item, movies_set, test_set, 5, 5)
-    recommender_engine.generate_recommendation(explanation_flag=0, sim_matrix_flag=1, user_id=1)
+    recommender_engine = recommender.JacLodRecommendationEngine(user_item, movies_set, test_set, 5, 5, 0, 0)
+    recommender_engine.generate_recommendation(user_id=1)
     print("--- END ---")
 
 

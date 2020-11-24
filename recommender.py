@@ -7,13 +7,21 @@ import explanations
 # A class that generates recomendations and explanations based on dbpedia
 class JacLodRecommendationEngine:
 
-    def __init__(self, user_item: pd.DataFrame, movies_set: pd.DataFrame, test_set: pd.DataFrame, k: int, n: int):
+    def __init__(self, user_item: pd.DataFrame, movies_set: pd.DataFrame, test_set: pd.DataFrame,
+                 k: int, n: int, explanation_flag: int, sim_matrix_flag: int,
+                 sim_matrix_path="./generated_files/sim_matrix.csv",
+                 all_props_path="./generated_files/all_movie_props.csv"):
         """
         Constructor of the class
         :param user_item: user item matrix
         :param movies_set: movies data frame with two columns for movie id and movie dbpedia uri
         :param test_set: test data frame with interactions to predict
         :param k: number of neighbours
+        :param n: number of recommendation items to return
+        :param explanation_flag: 1 to generate explanations and 0 otherwise
+        :param sim_matrix_flag: 1 to generate the similarity matrix from scratch, 0 to read from file path
+        :param sim_matrix_path: path to file of the similarity matrix
+        :param all_props_path: path to file with all properties
         """
 
         self.user_item = user_item
@@ -21,6 +29,10 @@ class JacLodRecommendationEngine:
         self.movies_set = movies_set.set_index(movies_set['movie_id'].values)
         self.k = k
         self.n = n
+        self.explanation_flag = explanation_flag
+        self.sim_matrix_flag = sim_matrix_flag
+        self.sim_matrix_path = sim_matrix_path
+        self.all_props_path = all_props_path
 
     def __calculate_jaccard(self,  movie1_id: int, props_m1: list, movie2_id: int, props_m2: list):
         """
@@ -48,29 +60,6 @@ class JacLodRecommendationEngine:
 
         return jaccard
 
-    def __get_movie_props(self, all_movies_props: pd.DataFrame, movie_id: int):
-        """
-        Get the movies properties from the data frame all_movie_props
-        :param all_movies_props: data frame to extract movie properties from
-        :param movie_id: id of the movie to extract the properties
-        :return: a list of tuples with all of the movie properties
-        """
-
-        try:
-            movie_props = all_movies_props.loc[movie_id]
-
-            # when movie_props size is two, it means that there is only one line of return
-            # and the command on line 63 wont work
-            if len(movie_props) > 2:
-                movie_tuples = [tuple(x) for x in movie_props.to_numpy()]
-            else:
-                movie_tuples = [(movie_props[0], movie_props[1])]
-
-        except KeyError:
-            movie_tuples = []
-
-        return movie_tuples
-
     def __generate_similarity_matrix(self, movies_id: list):
         """
         Function that generates the similarity matrix
@@ -78,15 +67,15 @@ class JacLodRecommendationEngine:
         :return: movie per movie similarity matrix where 1 means more proximity and 0 otherwise
         """
 
-        movies_props = sparql_utils.get_all_movie_props(self.movies_set, flag=1)
+        movies_props = sparql_utils.get_all_movie_props(self.movies_set, self.sim_matrix_flag, self.all_props_path)
         sim_movies = pd.DataFrame(0, index=movies_id, columns=movies_id)
 
         for i in range(0, len(movies_id)):
             movie1 = movies_id[i]
-            movie1_props = self.__get_movie_props(movies_props, movie1)
+            movie1_props = sparql_utils.movie_props_tolist(movie1, movies_props)
             for j in range(i, len(movies_id)):
                 movie2 = movies_id[j]
-                movie2_props = self.__get_movie_props(movies_props, movie2)
+                movie2_props = sparql_utils.movie_props_tolist(movie2, movies_props)
                 jac_sim = self.__calculate_jaccard(movie1, movie1_props, movie2, movie2_props)
                 sim_movies.loc[movie1, movie2] = jac_sim
                 sim_movies.loc[movie2, movie1] = jac_sim
@@ -94,23 +83,19 @@ class JacLodRecommendationEngine:
 
         return sim_movies
 
-    def __get_similarity_matrix(self, flag: int, file_path="./generated_files/sim_matrix.csv"):
+    def __get_similarity_matrix(self):
         """
-        Function that gets or generates the similarity matrix based on the flag
-        :param flag: if 0 the function will generate the sim matrix and save it on path
-            "./generated_files/sim_matrix.csv" (it will take much longer time to finish). Otherwise,
-             the matrix will be read from file path
-        :param file_path: path where the matrix will be saved/read from
+        Function that gets or generates the similarity matrix
         :return: the similarity matrix with index and column
         """
         movies_id = self.movies_set['movie_id'].to_list()
         movies_id.sort()
 
-        if flag == 0:
+        if self.sim_matrix_flag == 1:
             sim_matrix = self.__generate_similarity_matrix(movies_id)
-            sim_matrix.to_csv(file_path, mode='w', header=False, index=False)
+            sim_matrix.to_csv(self.sim_matrix_path, mode='w', header=False, index=False)
         else:
-            sim_matrix = pd.read_csv(file_path, header=None)
+            sim_matrix = pd.read_csv(self.sim_matrix_path, header=None)
             sim_matrix.columns = movies_id
             sim_matrix.index = movies_id
 
@@ -141,15 +126,13 @@ class JacLodRecommendationEngine:
 
         return prediction
 
-    def generate_recommendation(self, explanation_flag: int, sim_matrix_flag: int, user_id: int):
+    def generate_recommendation(self, user_id: int):
         """
         Function that generates a top n recommendation to a user
-        :param explanation_flag: 0 to generate explanation and other numbers to not generate explanations
-        :param sim_matrix_flag: 0 to generate similarity matrix and other numbers to read from file
         :param user_id: user to generate recommendation
         :return: recommendations with or without the explanation to the user
         """
-        sim_matrix = self.__get_similarity_matrix(sim_matrix_flag)
+        sim_matrix = self.__get_similarity_matrix()
         user_interactions = self.user_item.loc[user_id].sort_values()
 
         profile = user_interactions[user_interactions == 1]
@@ -167,6 +150,12 @@ class JacLodRecommendationEngine:
         print("Movies recommended to the user " + str(user_id) + ": ")
         for movie in recommended_movies.index:
             print(self.movies_set.loc[movie]['dbpedia_uri'])
+
+        if self.explanation_flag == 1:
+            all_movies_props = sparql_utils.get_all_movie_props(self.movies_set, self.sim_matrix_flag)
+            movies_explanations = explanations.Explanations(profile, recommended_movies, all_movies_props)
+
+            movies_explanations.generate_explanations()
 
     def generate_map(self):
         return
