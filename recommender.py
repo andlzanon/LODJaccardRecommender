@@ -143,17 +143,23 @@ class JacLodRecommendationEngine:
 
         prediction = prediction.sort_values(ascending=False)
         recommended_movies = prediction[:self.n]
-        print("Movies watched by the user " + str(user_id) + ": ")
+        print("----- MOVIES WATCHED BY THE USER " + str(user_id) + " -----")
         for movie in profile.index:
-            print(self.movies_set.loc[movie]['dbpedia_uri'])
+            print(sparql_utils.get_movie_name(sparql_utils.get_all_movie_props(self.movies_set, 0, self.all_props_path),
+                                             movie))
 
-        print("Movies recommended to the user " + str(user_id) + ": ")
+        print("----- MOVIES RECOMMENDED TO THE USER " + str(user_id) + " -----")
         for movie in recommended_movies.index:
-            print(self.movies_set.loc[movie]['dbpedia_uri'])
+            print(sparql_utils.get_movie_name(sparql_utils.get_all_movie_props(self.movies_set, 0, self.all_props_path),
+                                              movie))
 
+        print("----- EXPLANATIONS TO THE USER " + str(user_id) + " -----")
         if self.explanation_flag == 1:
-            all_movies_props = sparql_utils.get_all_movie_props(self.movies_set, self.sim_matrix_flag)
-            movies_explanations = explanations.Explanations(profile, recommended_movies, all_movies_props)
+            all_movies_props = sparql_utils.get_all_movie_props(self.movies_set,
+                                                                self.sim_matrix_flag,
+                                                                self.all_props_path)
+            movies_explanations = explanations.Explanations(profile, recommended_movies,
+                                                            all_movies_props, len(sim_matrix.index.unique()))
 
             movies_explanations.generate_explanations()
 

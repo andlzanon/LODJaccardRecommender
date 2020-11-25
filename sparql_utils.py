@@ -124,3 +124,8 @@ def results_to_dict(movie_id: int, props_movie: dict):
         filter_props.append(dict_props)
 
     return filter_props
+
+def get_movie_name(all_movie_props: pd.DataFrame, movie_id: int):
+    movie_props = all_movie_props.loc[movie_id]
+    name = movie_props.loc[movie_props['prop'] == "http://xmlns.com/foaf/0.1/name"]['obj'].values[0]
+    return name
