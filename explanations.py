@@ -103,13 +103,13 @@ class Explanations:
                 count = 0
                 for movie_id in movies_id.iteritems():
                     movie_name = sparql_utils.get_movie_name(self.movie_props, movie_id[1])
-                    if count != len(graph) - 1:
-                        sentence = sentence + movie_name + ", "
+                    if count != len(movies_id) - 1:
+                        sentence = sentence + "\"" + movie_name + "\", "
                     else:
-                        sentence = sentence[:-2] + " and " + movie_name
+                        sentence = sentence[:-2] + " and \"" + movie_name + "\""
                     count = count + 1
             else:
-                movie_name = sparql_utils.get_movie_name(self.movie_props, movies_id)
+                movie_name = "\"" + sparql_utils.get_movie_name(self.movie_props, movies_id) + "\""
                 sentence = sentence + movie_name
 
             explanations.append(sentence)
@@ -124,8 +124,8 @@ class Explanations:
         else:
             explanation_sentence = explanations[0] + explanations[1]
 
-        explanation_sentence = explanation_sentence + " watch " + \
-                               sparql_utils.get_movie_name(self.movie_props, movie) + " with these same characteristics"
+        explanation_sentence = explanation_sentence + " watch \"" + \
+                               sparql_utils.get_movie_name(self.movie_props, movie) + "\" with these same characteristics"
 
         return explanation_sentence
 
