@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-import recommender
+import lod_recommender
 
 
 def read_data_set(file_path: str, columns: list):
@@ -37,8 +37,11 @@ def main():
         user_item.loc[user_id, movie_id] = 1
 
     # call recomendation engine and get or generate similarity matrix based on dbpedia
-    recommender_engine = recommender.JacLodRecommendationEngine(user_item, movies_set, test_set, 5, 5, 1, 0)
-    recommender_engine.generate_recommendation(user_id=2)
+    recommender_engine = lod_recommender.JacLodRecommendationEngine(user_item, movies_set, test_set, 5, 5, 1, 0)
+    recommender_engine.generate_recommendation(user_id=1)
+    print("--- MAP ---")
+    mean_ap = recommender_engine.generate_map()
+    print(mean_ap)
     print("--- END ---")
 
 

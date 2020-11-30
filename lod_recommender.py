@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 import sparql_utils
+import evaluation_utils
 import explanations
 
 
@@ -101,31 +102,6 @@ class JacLodRecommendationEngine:
 
         return sim_matrix
 
-    def __calculate_prediction(self, movie: int, profile: pd.DataFrame, sim_matrix: pd.DataFrame):
-        """
-        Calculates the prediction of a user to like a movie
-        :param movie: movie that the user may like
-        :param profile: user profile with items interacted
-        :param sim_matrix: similarity matrix
-        :return: sum os similarities that predicts if the user will like an item
-        """
-        curr_n = 0
-        i = 1
-        prediction = 0
-
-        similar_movies = sim_matrix.loc[movie].sort_values(ascending=False)
-        while curr_n < self.k and i < len(similar_movies):
-            neig_movie = similar_movies.index[i]
-            if neig_movie in profile.index:
-                prediction = prediction + similar_movies.iloc[i]
-                curr_n = curr_n + 1
-            i = i + 1
-
-        if curr_n != 0:
-            prediction = prediction / curr_n
-
-        return prediction
-
     def generate_recommendation(self, user_id: int):
         """
         Function that generates a top n recommendation to a user
@@ -139,7 +115,7 @@ class JacLodRecommendationEngine:
         prediction = user_interactions[user_interactions.isnull()]
 
         for movie in prediction.index:
-            prediction.loc[movie] = self.__calculate_prediction(movie, profile, sim_matrix)
+            prediction.loc[movie] = evaluation_utils.calculate_prediction(movie, profile, sim_matrix, self.k)
 
         prediction = prediction.sort_values(ascending=False)
         recommended_movies = prediction[:self.n]
@@ -164,4 +140,9 @@ class JacLodRecommendationEngine:
             movies_explanations.generate_explanations()
 
     def generate_map(self):
-        return
+        """
+        Function that returns the MAP accuracy metric of the recommendation algorithm
+        :return: MAP accuracy of the algorithm
+        """
+        sim_matrix = self.__get_similarity_matrix()
+        return evaluation_utils.generate_map(sim_matrix, self.test_set, self.user_item, self.n, self.k)
