@@ -154,11 +154,17 @@ class Explanations:
                     explanation_sentence = explanation_sentence + explanations[i] + "; "
                 else:
                     explanation_sentence = explanation_sentence[:-2] + " and " + explanations[i]
+
+            explanation_sentence = explanation_sentence + " watch \"" + \
+                                   sparql_utils.get_movie_name(self.movie_props,
+                                                               movie) + "\" with these same characteristics"
+
         else:
             explanation_sentence = explanations[0] + explanations[1]
 
-        explanation_sentence = explanation_sentence + " watch \"" + \
-                               sparql_utils.get_movie_name(self.movie_props, movie) + "\" with these same characteristics"
+            explanation_sentence = explanation_sentence + " watch \"" + \
+                                   sparql_utils.get_movie_name(self.movie_props,
+                                                               movie) + "\" with this same characteristic"
 
         return explanation_sentence
 

@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 import lod_recommender
-
+import baseline_colaborative_cosine as cos_baseline
 
 def read_data_set(file_path: str, columns: list):
     """
@@ -36,12 +36,15 @@ def main():
         movie_id = row[1]
         user_item.loc[user_id, movie_id] = 1
 
+    # baseline = cos_baseline.CosineBaseline(user_item, test_set, movies_set, 5, 5, sim_matrix_flag=1)
+    # baseline.generate_map()
+
     # call recomendation engine and get or generate similarity matrix based on dbpedia
     recommender_engine = lod_recommender.JacLodRecommendationEngine(user_item, movies_set, test_set, 5, 5, 1, 0)
     recommender_engine.generate_recommendation(user_id=1)
-    print("--- MAP ---")
-    mean_ap = recommender_engine.generate_map()
-    print(mean_ap)
+    # print("--- MAP ---")
+    # mean_ap = recommender_engine.generate_map()
+    # print(mean_ap)
     print("--- END ---")
 
 
