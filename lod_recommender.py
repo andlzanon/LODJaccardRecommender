@@ -35,6 +35,22 @@ class JacLodRecommendationEngine:
         self.sim_matrix_path = sim_matrix_path
         self.all_props_path = all_props_path
 
+    def set_k(self, new_k: int):
+        """
+        setter of neighbours of class
+        :param new_k: new value of k
+        :return:k of class changed
+        """
+        self.k = new_k
+
+    def set_n(self, new_n: int):
+        """
+        setter of top n of class
+        :param new_n: new value of n
+        :return: n of class changed
+        """
+        self.n = new_n
+
     def __calculate_jaccard(self,  movie1_id: int, props_m1: list, movie2_id: int, props_m2: list):
         """
         Function that calculates the jaccard similarity of two movies, if they are the same return 1

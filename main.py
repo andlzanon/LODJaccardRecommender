@@ -3,6 +3,7 @@ import pandas as pd
 import lod_recommender
 import baseline_colaborative_cosine as cos_baseline
 
+
 def read_data_set(file_path: str, columns: list):
     """
     :param file_path: path of dataset file
@@ -15,11 +16,29 @@ def read_data_set(file_path: str, columns: list):
     return set
 
 
-def main():
+def get_acuracy_results(lod_rec: lod_recommender.JacLodRecommendationEngine, baseline_rec: cos_baseline.CosineBaseline,
+                        k_values: list):
     """
-    create DataFrames, call recommendation engine and show results
+    Compute map accuracy results for proposed and recommended
+    :param lod_rec: lod dbpedia recommender
+    :param baseline_rec: baseline cosine recommender
+    :param k_values: vector of k params to test
+    :return: file with results
     """
+    f = open("./results/results.txt", "w")
+    for k in k_values:
+        f.write("--- K = " + str(k) + " ---\n")
 
+        lod_rec.set_k(k)
+        baseline_rec.set_k(k)
+
+        f.write("LOD Jaccard Algorithm MAP: " + str(lod_rec.generate_map()))
+        f.write("LOD Jaccard Algorithm MAP: " + str(lod_rec.generate_map()))
+
+    f.close()
+
+
+def main():
     cols = ['user_id', 'movie_id', 'interaction']
     # test and train sets are divided 0.2 and 0.8 respectively
     train_set = read_data_set("./facebook_movies/trainingset.tsv", cols)
@@ -36,12 +55,12 @@ def main():
         movie_id = row[1]
         user_item.loc[user_id, movie_id] = 1
 
-    # baseline = cos_baseline.CosineBaseline(user_item, test_set, movies_set, 5, 5, sim_matrix_flag=1)
-    # baseline.generate_map()
-
-    # call recomendation engine and get or generate similarity matrix based on dbpedia
+    # call recomendation engines
+    # baseline = cos_baseline.CosineBaseline(user_item, test_set, movies_set, 5, 5)
     recommender_engine = lod_recommender.JacLodRecommendationEngine(user_item, movies_set, test_set, 5, 5, 1, 0)
-    recommender_engine.generate_recommendation(user_id=1)
+    # get_acuracy_results(recommender_engine, baseline, [3, 5, 15])
+
+    recommender_engine.generate_recommendation(user_id=10)
     # print("--- MAP ---")
     # mean_ap = recommender_engine.generate_map()
     # print(mean_ap)
