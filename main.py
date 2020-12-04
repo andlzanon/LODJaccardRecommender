@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import lod_recommender
 import baseline_colaborative_cosine as cos_baseline
+import evaluation_utils
 
 
 def read_data_set(file_path: str, columns: list):
@@ -14,29 +15,6 @@ def read_data_set(file_path: str, columns: list):
     set = pd.read_csv(file_path, header=None, sep="\t")
     set.columns = columns
     return set
-
-
-def get_acuracy_results(lod_rec: lod_recommender.JacLodRecommendationEngine, baseline_rec: cos_baseline.CosineBaseline,
-                        k_values: list):
-    """
-    Compute map accuracy results for proposed and recommended
-    :param lod_rec: lod dbpedia recommender
-    :param baseline_rec: baseline cosine recommender
-    :param k_values: vector of k params to test
-    :return: file with results
-    """
-    f = open("./results/results.txt", "w")
-    for k in k_values:
-        f.write("--- K = " + str(k) + " ---\n")
-
-        lod_rec.set_k(k)
-        baseline_rec.set_k(k)
-
-        f.write("LOD Jaccard Algorithm MAP: " + str(lod_rec.generate_map()))
-        f.write("LOD Jaccard Algorithm MAP: " + str(lod_rec.generate_map()))
-
-    f.close()
-
 
 def main():
     cols = ['user_id', 'movie_id', 'interaction']
@@ -56,14 +34,17 @@ def main():
         user_item.loc[user_id, movie_id] = 1
 
     # call recomendation engines
-    # baseline = cos_baseline.CosineBaseline(user_item, test_set, movies_set, 5, 5)
     recommender_engine = lod_recommender.JacLodRecommendationEngine(user_item, movies_set, test_set, 5, 5, 1, 0)
-    # get_acuracy_results(recommender_engine, baseline, [3, 5, 15])
-
     recommender_engine.generate_recommendation(user_id=10)
-    # print("--- MAP ---")
-    # mean_ap = recommender_engine.generate_map()
-    # print(mean_ap)
+
+    # ---- accuracy results code ----
+    # k_values = [5, 10, 20]
+    # evaluation_utils.generate_accuracy_results(recommender_engine, k_values, "./results/lod_results.txt",
+    #                                        "LOD Jaccard Recommender")
+    # baseline = cos_baseline.CosineBaseline(user_item, test_set, movies_set, 5, 5)
+    # evaluation_utils.generate_accuracy_results(baseline, k_values, "./results/baseline_results.txt",
+    #                                            "Baseline Collaborative Item-KNN Recommender")
+
     print("--- END ---")
 
 

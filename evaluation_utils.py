@@ -42,7 +42,8 @@ def generate_map(sim_matrix: pd.DataFrame, test_set: pd.DataFrame, user_item: pd
     test_set = test_set.set_index('user_id')
     map_users = pd.DataFrame(index=test_set.index.unique(), columns=['map'])
 
-    for user_id in test_set.index.unique():
+    users = test_set.index.unique()[:300]
+    for user_id in users:
         user_interactions = user_item.loc[user_id].sort_values()
 
         profile = user_interactions[user_interactions == 1]
@@ -57,9 +58,14 @@ def generate_map(sim_matrix: pd.DataFrame, test_set: pd.DataFrame, user_item: pd
         n_hits = 0
         ap = 0
 
+        test_user_movies = test_set.loc[user_id]['movie_id'].tolist()
+
+        if type(test_user_movies) != list:
+            test_user_movies = [test_user_movies]
+
         for rank in range(0, len(recommended_movies.index)):
             movie = recommended_movies.index[rank]
-            if movie in test_set.loc[user_id]['movie_id'].tolist():
+            if movie in test_user_movies:
                 n_hits = n_hits + 1
                 ap = ap + (n_hits / (rank + 1))
 
@@ -72,3 +78,25 @@ def generate_map(sim_matrix: pd.DataFrame, test_set: pd.DataFrame, user_item: pd
         map_users.loc[user_id] = u_ap
 
     return map_users.mean()['map']
+
+
+def generate_accuracy_results(recommender,
+                        k_values: list, file_path: str, name: str):
+    """
+    Compute map accuracy results for proposed and recommended
+    :param lod_rec: lod dbpedia recommender
+    :param baseline_rec: baseline cosine recommender
+    :param k_values: vector of k params to test
+    :return: file with results
+    """
+    f = open(file_path, "w")
+    f.write(name + ":\n")
+    for k in k_values:
+        print("--- K = " + str(k) + " ---")
+        f.write("--- K = " + str(k) + " ---\n")
+
+        recommender.set_k(k)
+
+        f.write("Algorithm MAP: " + str(recommender.generate_map()))
+
+    f.close()

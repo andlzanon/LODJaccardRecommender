@@ -30,13 +30,11 @@ class Explanations:
         cols = ['movie_id', 'prop', 'obj']
         graph = pd.DataFrame(columns=cols)
 
-        rec_movie_props = self.movie_props.loc[rec_movie_id]
-        rec_movie_props_l = sparql_utils.movie_props_tolist(rec_movie_id, rec_movie_props)
+        rec_movie_props_l = sparql_utils.movie_props_tolist(rec_movie_id, self.movie_props)
 
         for i in range(0, len(self.profile.index)):
             pro_movie = self.profile.index[i]
-            pro_movie_props = self.movie_props.loc[pro_movie]
-            pro_movie_props_l = sparql_utils.movie_props_tolist(pro_movie, pro_movie_props)
+            pro_movie_props_l = sparql_utils.movie_props_tolist(pro_movie, self.movie_props)
 
             intersection = pd.Series(list(set(rec_movie_props_l).intersection(set(pro_movie_props_l))), dtype=str)
             for tuples in intersection.values:
