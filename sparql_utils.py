@@ -1,4 +1,5 @@
 import pandas as pd
+import re
 from SPARQLWrapper import SPARQLWrapper, JSON
 
 
@@ -125,7 +126,27 @@ def results_to_dict(movie_id: int, props_movie: dict):
 
     return filter_props
 
-def get_movie_name(all_movie_props: pd.DataFrame, movie_id: int):
-    movie_props = all_movie_props.loc[movie_id]
-    name = movie_props.loc[movie_props['prop'] == "http://xmlns.com/foaf/0.1/name"]['obj'].values[0]
+
+def get_movie_name(all_movie_props: pd.DataFrame, movies_set: pd.DataFrame, movie_id: int):
+    """
+    Function that return the movie name
+    :param all_movie_props: properties of all movies from dbpedia
+    :param movies_set: set of movies on data set with movie id and dbpedia uri
+    :param movie_id: movie id
+    :return: the movie name
+    """
+    try:
+        movie_props = all_movie_props.loc[movie_id]
+        name = movie_props.loc[movie_props['prop'] == "http://xmlns.com/foaf/0.1/name"]['obj'].values[0]
+
+    except (KeyError, IndexError) as e:
+        movie_uri = movies_set.loc[movie_id]['dbpedia_uri']
+        reg = r'\([\s\S]*\)'
+        separated = movie_uri.split("/")
+        most_important = separated[-1]
+        most_important = re.sub(reg, '', most_important)
+        name = most_important.replace("_", " ")
+        if name[-1] == " ":
+            name = name[:-1]
+
     return name

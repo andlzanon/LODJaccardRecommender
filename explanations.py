@@ -8,17 +8,19 @@ import math
 class Explanations:
 
     def __init__(self, profile: pd.DataFrame, recommended: pd.DataFrame,
-                 movie_props: pd.DataFrame, number_documents: int):
+                 movie_props: pd.DataFrame, movies_set: pd.DataFrame, number_documents: int):
         """
         Constructor of class explanations
         :param profile: items that the user interacted
         :param recommended: recommended movies
         :param movie_props: movies properties
+        :param movies_set: set of movies in data set
         :param number_documents: number of movies in data_set
         """
         self.profile = profile
         self.recommended = recommended
         self.movie_props = movie_props
+        self.movies_set = movies_set
         self.number_documents = number_documents
 
     def __get_profile_recommended_graph(self, rec_movie_id: int):
@@ -132,14 +134,14 @@ class Explanations:
             if type(movies_id) == pd.Series:
                 count = 0
                 for movie_id in movies_id.iteritems():
-                    movie_name = sparql_utils.get_movie_name(self.movie_props, movie_id[1])
+                    movie_name = sparql_utils.get_movie_name(self.movie_props, self.movies_set, movie_id[1])
                     if count != len(movies_id) - 1:
                         sentence = sentence + "\"" + movie_name + "\", "
                     else:
                         sentence = sentence[:-2] + " and \"" + movie_name + "\""
                     count = count + 1
             else:
-                movie_name = "\"" + sparql_utils.get_movie_name(self.movie_props, movies_id) + "\""
+                movie_name = "\"" + sparql_utils.get_movie_name(self.movie_props, self.movies_set, movies_id) + "\""
                 sentence = sentence + movie_name
 
             explanations.append(sentence)
@@ -154,14 +156,14 @@ class Explanations:
                     explanation_sentence = explanation_sentence[:-2] + " and " + explanations[i]
 
             explanation_sentence = explanation_sentence + " watch \"" + \
-                                   sparql_utils.get_movie_name(self.movie_props,
+                                   sparql_utils.get_movie_name(self.movie_props, self.movies_set,
                                                                movie) + "\" with these same characteristics"
 
         else:
             explanation_sentence = explanations[0] + explanations[1]
 
             explanation_sentence = explanation_sentence + " watch \"" + \
-                                   sparql_utils.get_movie_name(self.movie_props,
+                                   sparql_utils.get_movie_name(self.movie_props, self.movies_set,
                                                                movie) + "\" with this same characteristic"
 
         return explanation_sentence

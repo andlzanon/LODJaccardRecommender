@@ -16,6 +16,7 @@ def read_data_set(file_path: str, columns: list):
     set.columns = columns
     return set
 
+
 def main():
     cols = ['user_id', 'movie_id', 'interaction']
     # test and train sets are divided 0.2 and 0.8 respectively
@@ -35,7 +36,10 @@ def main():
 
     # call recomendation engines
     recommender_engine = lod_recommender.JacLodRecommendationEngine(user_item, movies_set, test_set, 5, 5, 1, 0)
-    recommender_engine.generate_recommendation(user_id=10)
+    recommender_engine.generate_recommendation(user_id=144)
+    recommender_engine.generate_recommendation(user_id=5442)
+    recommender_engine.generate_recommendation(user_id=432)
+    recommender_engine.generate_recommendation(user_id=873)
 
     # ---- accuracy results code ----
     # k_values = [5, 10, 20]

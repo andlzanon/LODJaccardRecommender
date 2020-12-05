@@ -138,12 +138,12 @@ class JacLodRecommendationEngine:
         print("----- MOVIES WATCHED BY THE USER " + str(user_id) + " -----")
         for movie in profile.index:
             print(sparql_utils.get_movie_name(sparql_utils.get_all_movie_props(self.movies_set, 0, self.all_props_path),
-                                             movie))
+                                             self.movies_set, movie))
 
         print("----- MOVIES RECOMMENDED TO THE USER " + str(user_id) + " -----")
         for movie in recommended_movies.index:
             print(sparql_utils.get_movie_name(sparql_utils.get_all_movie_props(self.movies_set, 0, self.all_props_path),
-                                              movie))
+                                              self.movies_set, movie))
 
         print("----- EXPLANATIONS TO THE USER " + str(user_id) + " -----")
         if self.explanation_flag == 1:
@@ -151,7 +151,7 @@ class JacLodRecommendationEngine:
                                                                 self.sim_matrix_flag,
                                                                 self.all_props_path)
             movies_explanations = explanations.Explanations(profile, recommended_movies,
-                                                            all_movies_props, len(sim_matrix.index.unique()))
+                                                            all_movies_props, self.movies_set, len(sim_matrix.index.unique()))
 
             movies_explanations.generate_explanations()
 
