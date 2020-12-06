@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 import lod_recommender
+import random
 import baseline_colaborative_cosine as cos_baseline
 import evaluation_utils
 
@@ -36,10 +37,11 @@ def main():
 
     # call recomendation engines
     recommender_engine = lod_recommender.JacLodRecommendationEngine(user_item, movies_set, test_set, 5, 5, 1, 0)
-    recommender_engine.generate_recommendation(user_id=144)
-    recommender_engine.generate_recommendation(user_id=5442)
-    recommender_engine.generate_recommendation(user_id=432)
-    recommender_engine.generate_recommendation(user_id=873)
+
+    n_rec = 3
+    for i in range(0, n_rec):
+        random_user = random.randint(train_set['user_id'].unique().min(), train_set['user_id'].unique().max())
+        recommender_engine.generate_recommendation(user_id=random_user)
 
     # ---- accuracy results code ----
     # k_values = [5, 10, 20]
