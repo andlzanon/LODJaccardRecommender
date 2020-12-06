@@ -4,9 +4,9 @@
 Codificação de um algoritmo de recomendação explicável baseado em conteúdo KNN 
 utilizando Jaccard e Linked Open Data.
 
-A similaridade entre itens é realizada por Jaccard entre as propriedades retornadas pela DPPedia 
+A similaridade entre itens é realizada por Jaccard entre as propriedades retornadas pela DBPedia 
 (https://wiki.dbpedia.org/) e as explicações são obtidas a partir das propriedades em comum entre os itens de
-perfil do usuário e o item recomendado. Por fim, é o ranqueamento das propriedades é realizado a partir de um
+perfil do usuário e o item recomendado. Por fim, o ranqueamento das propriedades é realizado a partir de um
 TF-IDF adaptado para a LOD em que TF é a quantidade de vezes que a propriedade é referenciada por itens de 
 perfil dividida pela quantidade de itens de perfil e o IDF é o log da divisão entre a quantidade total
 de itens no dataset pela quantidade de vezes que um item possui a propriedade.
@@ -20,14 +20,14 @@ de itens no dataset pela quantidade de vezes que um item possui a propriedade.
 ## Classes
 - JacLodRecommendationEngine: Recomendador proposto baseado em Jaccard;
 - Explanations: Classe que gera as explicações;
-- CosineBaseline: Algoritmo colaborativo utilizado para comparação de análise estatistica.
+- CosineBaseline: Algoritmo colaborativo ITEM-KNN utilizado para comparação de análise estatistica.
 
 ## Libs criadas
-- sparql_utils: funções de consulta na dbpedia;
+- sparql_utils: funções de consulta na DBpedia;
 - evaluation_utils: funções de implementação do MAP.
 
 ## Main
-O arquivo principal foi desenvolvido para exibir os itens assistidos para 3 usuários aleatórios da base de 
+O arquivo principal (main.py) foi desenvolvido para exibir os itens assistidos para 3 usuários aleatórios da base de 
 dados, suas recomendações e respectivas explicações.
 
 ## Consulta SPARQL
