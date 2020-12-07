@@ -25,16 +25,16 @@ de itens no dataset pela quantidade de vezes que um item possui a propriedade.
 - Baixar dataset (https://github.com/sisinflab/LinkedDatasets/tree/master/facebook_movies);
 - Ajustar nas classes os parâmetros para geração dos arquivos auxiliares e caminhos de arquivos.
 
-## Classes
+## Classes:
 - JacLodRecommendationEngine: Recomendador proposto baseado em Jaccard;
 - Explanations: Classe que gera as explicações;
 - CosineBaseline: Algoritmo colaborativo ITEM-KNN utilizado para comparação de análise estatistica.
 
-## Libs criadas
+## Libs criadas:
 - sparql_utils: funções de consulta na DBpedia;
 - evaluation_utils: funções de implementação do MAP.
 
-## Main
+## Main:
 O arquivo principal (main.py) foi desenvolvido para exibir os itens assistidos para 3 usuários aleatórios da base de 
 dados, suas recomendações e respectivas explicações.
 
