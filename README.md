@@ -38,6 +38,16 @@ de itens no dataset pela quantidade de vezes que um item possui a propriedade.
 O arquivo principal (main.py) foi desenvolvido para exibir os itens assistidos para 3 usuários aleatórios da base de 
 dados, suas recomendações e respectivas explicações.
 
+## Créditos de bibliotecas:
+Para instalar utilizar comando: 
+    
+    pip install <lib>==<version>
+
+* [numpy 1.19.1](https://numpy.org/)
+* [pandas 1.0.4](https://pandas.pydata.org/)
+* [scipy 1.5.0](https://www.scipy.org/)
+* [SPARQLWrapper 1.8.5](https://github.com/RDFLib/sparqlwrapper)
+
 ## Consulta SPARQL
     SELECT DISTINCT *
     WHERE { 
@@ -50,6 +60,8 @@ dados, suas recomendações e respectivas explicações.
     }
 
 ## Exemplos de retornos
+
+### Exemplo 1:
     ----- MOVIES WATCHED BY THE USER 5729 -----
     Avatar
     Click
@@ -83,12 +95,30 @@ dados, suas recomendações e respectivas explicações.
     Because you like 2000s adventure films such as "Avatar", "National Treasure", "The Curse of the Black Pearl" and "300" watch "National Treasure: Book of Secrets" with this same characteristic
     Because you like the producer Jack Giarraputo of "Click", "Anger Management" and "50 First Dates" watch "Mr Deeds" with this same characteristic
 
-## Créditos de bibliotecas:
-Para instalar utilizar comando: 
-    
-    pip install <lib>==<version>
-
-* [numpy 1.19.1](https://numpy.org/)
-* [pandas 1.0.4](https://pandas.pydata.org/)
-* [scipy 1.5.0](https://www.scipy.org/)
-* [SPARQLWrapper 1.8.5](https://github.com/RDFLib/sparqlwrapper)
+### Exemplo 2:
+    ----- MOVIES WATCHED BY THE USER 6364 -----
+    WALL-E
+    Spider-Man
+    Rambo
+    The Thing
+    The Incredible Hulk
+    Underworld: Rise of the Lycans
+    Pirates of the Caribbean
+    Rocky
+    Blade
+    Aliens
+    Blade II
+    Maverick
+    ----- MOVIES RECOMMENDED TO THE USER 6364 -----
+    Spider-Man 2
+    Rocky II
+    Blade: Trinity
+    Spider-Man 3
+    Rocky III
+    ----- EXPLANATIONS TO THE USER 6364 -----
+    Because you like american action films such as "Spider-Man", "The Incredible Hulk", "Blade" and "Blade II" watch "Spider-Man 2" with this same characteristic
+    Because you like 1970s sports films such as "Rocky" watch "Rocky II" with this same characteristic
+    Because you like american action films such as "Spider-Man", "The Incredible Hulk", "Blade" and "Blade II" watch "Blade: Trinity" with this same characteristic
+    Because you like american action films such as "Spider-Man", "The Incredible Hulk", "Blade" and "Blade II" watch "Spider-Man 3" with this same characteristic
+    Because you like films starring Burgess Meredith like "Rocky" watch "Rocky III" with this same characteristic
+    --- END ---
