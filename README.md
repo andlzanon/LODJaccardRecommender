@@ -121,3 +121,32 @@ Para instalar utilizar comando:
     Because you like american action films such as "Spider-Man", "The Incredible Hulk", "Blade" and "Blade II" watch "Blade: Trinity" with this same characteristic
     Because you like american action films such as "Spider-Man", "The Incredible Hulk", "Blade" and "Blade II" watch "Spider-Man 3" with this same characteristic
     Because you like films starring Burgess Meredith like "Rocky" watch "Rocky III" with this same characteristic
+    
+### Exemplo 3:
+
+    ----- MOVIES WATCHED BY THE USER 6087 -----
+    The Devil Wears Prada
+    Spirited Away
+    Moulin Rouge
+    Rent
+    The Proposal
+    The Phantom of the Opera
+    He's Just Not That Into You
+    The Demon Barber of Fleet Street
+    Chicago
+    Aladdin
+    Friday the 13th
+    The Princess Diaries
+    Killers
+    ----- MOVIES RECOMMENDED TO THE USER 6087 -----
+    The Princess Diaries 2: Royal Engagement
+    Maid in Manhattan
+    Coyote Ugly
+    Raising Helen
+    License to Wed
+    ----- EXPLANATIONS TO THE USER 6087 -----
+    Because you like films starring Héctor Elizondo like "The Princess Diaries" watch "The Princess Diaries 2: Royal Engagement" with this same characteristic
+    Because you like the cinematography of Karl Walter Lindenlaub of "The Princess Diaries" watch "Maid in Manhattan" with this same characteristic
+    Because you like 2000s musical films such as "Rent", "The Phantom of the Opera", "The Demon Barber of Fleet Street" and "Chicago" watch "Coyote Ugly" with this same characteristic
+    Because you like films directed by Garry Marshall such as "The Princess Diaries" watch "Raising Helen" with this same characteristic
+    Because you like films directed by Ken Kwapis such as "He's Just Not That Into You" and the director Ken Kwapis of "He's Just Not That Into You" watch "License to Wed" with these same characteristics
