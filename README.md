@@ -150,3 +150,30 @@ Para instalar utilizar comando:
     Because you like 2000s musical films such as "Rent", "The Phantom of the Opera", "The Demon Barber of Fleet Street" and "Chicago" watch "Coyote Ugly" with this same characteristic
     Because you like films directed by Garry Marshall such as "The Princess Diaries" watch "Raising Helen" with this same characteristic
     Because you like films directed by Ken Kwapis such as "He's Just Not That Into You" and the director Ken Kwapis of "He's Just Not That Into You" watch "License to Wed" with these same characteristics
+    
+### Exemplo 4
+
+    ----- MOVIES WATCHED BY THE USER 6401 -----
+    Forrest Gump
+    Saving Private Ryan
+    American Pie
+    Eat Pray Love
+    Meet the Fockers
+    Paul
+    Home Alone
+    A Beautiful Mind
+    Terms of Endearment
+    The Smurfs
+    Whatever Works
+    ----- MOVIES RECOMMENDED TO THE USER 6401 -----
+    Home Alone 2: Lost in New York
+    Meet the Parents
+    American Pie 2
+    Little Fockers
+    Ordinary People
+    ----- EXPLANATIONS TO THE USER 6401 -----
+    Because you like Home Alone (franchise) such as "Home Alone" watch "Home Alone 2: Lost in New York" with this same characteristic
+    Because you like films starring Teri Polo like "Meet the Fockers" watch "Meet the Parents" with this same characteristic
+    Because you like the music composer David Nessim Lawrence of "American Pie" and films starring Thomas Ian Nicholas like "American Pie" watch "American Pie 2" with these same characteristics
+    Because you like films directed by Paul Weitz such as "American Pie" watch "Little Fockers" with this same characteristic
+    Because you like best Drama Picture Golden Globe winners such as "Forrest Gump", "Saving Private Ryan", "A Beautiful Mind" and "Terms of Endearment" watch "Ordinary People" with this same characteristic
