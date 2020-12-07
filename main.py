@@ -38,7 +38,7 @@ def main():
     # call recomendation engines
     recommender_engine = lod_recommender.JacLodRecommendationEngine(user_item, movies_set, test_set, 5, 5, 1, 0)
 
-    n_rec = 20
+    n_rec = 3
     for i in range(0, n_rec):
         random_user = random.randint(train_set['user_id'].unique().min(), train_set['user_id'].unique().max())
         recommender_engine.generate_recommendation(user_id=random_user)
