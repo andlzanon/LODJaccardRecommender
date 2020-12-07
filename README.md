@@ -12,10 +12,18 @@ perfil dividida pela quantidade de itens de perfil e o IDF é o log da divisão 
 de itens no dataset pela quantidade de vezes que um item possui a propriedade.
 
 ## Reprodução:
-- Baixar dependências (ver seção Créditos de biliotecas para as utilizadas e suas versões);
+
+### Do projeto enviado pelo autor
+- Importar dependências (ver seção Créditos de biliotecas para as utilizadas e suas versões);
+- Descompactar projeto;
+- Abrir projeto no PyCharm
+- Rodar código
+
+### Do git
+- Importar dependências (ver seção Créditos de biliotecas para as utilizadas e suas versões);
 - Baixar projeto;
 - Baixar dataset (https://github.com/sisinflab/LinkedDatasets/tree/master/facebook_movies);
-- Ajustar nas classes os parâmetros de caminhos de arquivos.
+- Ajustar nas classes os parâmetros para geração dos arquivos auxiliares e caminhos de arquivos.
 
 ## Classes
 - JacLodRecommendationEngine: Recomendador proposto baseado em Jaccard;
@@ -76,9 +84,11 @@ dados, suas recomendações e respectivas explicações.
     Because you like the producer Jack Giarraputo of "Click", "Anger Management" and "50 First Dates" watch "Mr Deeds" with this same characteristic
 
 ## Créditos de bibliotecas:
-Para instalar utilizar comando pip install
+Para instalar utilizar comando: 
+    
+    pip install <lib>==<version>
 
 * [numpy 1.19.1](https://numpy.org/)
 * [pandas 1.0.4](https://pandas.pydata.org/)
 * [scipy 1.5.0](https://www.scipy.org/)
-* [SPARQLWrapper 1.8.5](https://www.scipy.org/)
+* [SPARQLWrapper 1.8.5](https://github.com/RDFLib/sparqlwrapper)
