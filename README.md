@@ -151,7 +151,7 @@ Para instalar utilizar comando:
     Because you like films directed by Garry Marshall such as "The Princess Diaries" watch "Raising Helen" with this same characteristic
     Because you like films directed by Ken Kwapis such as "He's Just Not That Into You" and the director Ken Kwapis of "He's Just Not That Into You" watch "License to Wed" with these same characteristics
     
-### Exemplo 4
+### Exemplo 4:
 
     ----- MOVIES WATCHED BY THE USER 6401 -----
     Forrest Gump
